@@ -1,0 +1,120 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Q03_50 Test 1
+      id: q03_50-test-1
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_50 Test 1
+        setup-command: javac Q03_50/Passwords.java
+        command: java -cp Q03_50 Passwords
+        input: |-
+          open
+          sesame
+        expected-output: The length of the shorter password is 4
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_50 Test 2
+      id: q03_50-test-2
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_50 Test 2
+        setup-command: javac Q03_50/Passwords.java
+        command: java -cp Q03_50 Passwords
+        input: |-
+          abrakadabra
+          alakazam
+        expected-output: The length of the shorter password is 8
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_51 Test
+      id: q03_51-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_51 Test
+        setup-command: javac Q03_51/DomainName.java
+        command: java -cp Q03_51 DomainName
+        input: google
+        expected-output: The Internet domain is www.google.com
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_54 Test
+      id: q03_54-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_54 Test
+        setup-command: javac Q03_54/Cube.java
+        command: java -cp Q03_54 Cube
+        input: '7.5'
+        expected-output: The cube of 7.5 is 421.875
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_56 Test
+      id: q03_56-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_56 Test
+        setup-command: javac Q03_56/FirstAndLastNames.java
+        command: java -cp Q03_56 FirstAndLastNames
+        input: Buddy Holly
+        expected-output: |-
+          Your full name is Buddy Holly
+          Your first name is Buddy
+          Your last name is Holly
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_65 Test
+      id: q03_65-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_65 Test
+        setup-command: javac Q03_65/Email.java
+        command: java -cp Q03_65 Email
+        input: mark@facebook.com
+        expected-output: |-
+          user name: mark
+          domain name: facebook.com
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Q03_66 Test
+      id: q03_66-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Q03_66 Test
+        setup-command: javac Q03_66/TelephoneNumber.java
+        command: java -cp Q03_66 TelephoneNumber
+        input: '8008675309'
+        expected-output: 8008675309 reformatted is (800) 867-5309
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        Q03_50-TEST-1_RESULTS: "${{steps.q03_50-test-1.outputs.result}}"
+        Q03_50-TEST-2_RESULTS: "${{steps.q03_50-test-2.outputs.result}}"
+        Q03_51-TEST_RESULTS: "${{steps.q03_51-test.outputs.result}}"
+        Q03_54-TEST_RESULTS: "${{steps.q03_54-test.outputs.result}}"
+        Q03_56-TEST_RESULTS: "${{steps.q03_56-test.outputs.result}}"
+        Q03_65-TEST_RESULTS: "${{steps.q03_65-test.outputs.result}}"
+        Q03_66-TEST_RESULTS: "${{steps.q03_66-test.outputs.result}}"
+      with:
+        runners: q03_50-test-1,q03_50-test-2,q03_51-test,q03_54-test,q03_56-test,q03_65-test,q03_66-test
